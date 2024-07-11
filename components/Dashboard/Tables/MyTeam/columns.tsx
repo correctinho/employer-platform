@@ -18,7 +18,7 @@ import Link from "next/link"
 
 
 export type BusinessUser = {
-    uuid: string
+    id: string
     img: string | null
     is_admin: boolean
     user_name: string
@@ -105,13 +105,13 @@ export const columns: ColumnDef<BusinessUser>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start">
                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                        <Link href={`/dashboard/minha-equipe/${businessUser.uuid}`}>
+                        <Link href={`/dashboard/minha-equipe/${businessUser.id}`}>
                             <DropdownMenuItem>
                                 Ver usuário
                             </DropdownMenuItem>
                         </Link>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(businessUser.uuid)}
+                            onClick={() => navigator.clipboard.writeText(businessUser.id)}
                         >
                             Copiar Id
                         </DropdownMenuItem>

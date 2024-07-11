@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "json-server": "json-server --watch db.json --port 3300"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
@@ -30,6 +31,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "json-server": "^1.0.0-beta.1",
     "lucide-react": "^0.379.0",
     "next": "14.2.3",
     "next-auth": "^5.0.0-beta.3",

@@ -7,6 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     loading?: boolean,
     children: ReactNode
 }
+
 export function ButtonComp({ loading, children, ...rest }: ButtonProps) {
     return (
         <button
@@ -15,13 +16,12 @@ export function ButtonComp({ loading, children, ...rest }: ButtonProps) {
             {...rest}
         >
             {loading ? (
-                // <FaSpinner color="#fff" size={16} />
-                <Loader />
-            ) : (<a className={styles.buttonText}>
-                {children}
-            </a>)
-            }
-
+                <Loader className={styles.loader} />
+            ) : (
+                <a className={styles.buttonText}>
+                    {children}
+                </a>
+            )}
         </button>
     )
 }

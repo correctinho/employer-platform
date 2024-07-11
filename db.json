@@ -1,0 +1,64 @@
+{
+    "business-users": [
+        {
+            "id": "1",
+            "img": "https://example.com/avatar1.png",
+            "is_admin": true,
+            "user_name": "john_doe",
+            "document": "123456789",
+            "permissions": ["sales"],
+            "email": "john.doe@example.com",
+            "function": "CEO",
+            "status": "active",
+            "token": "abcdef123456",
+            "createdAt": "2024-06-26T09:24:39"
+        },
+        {
+            "id": "2",
+            "img": null,
+            "is_admin": false,
+            "user_name": "jane_smith",
+            "document": null,
+            "permissions": ["sales", "finances"],
+            "email": "jane.smith@example.com",
+            "function": "Sales Manager",
+            "status": "inactive",
+            "token": "xyz987654321",
+            "createdAt": "2023-02-20T13:30:00Z"
+        },
+        {
+            "id": "3",
+            "img": "https://example.com/avatar3.png",
+            "is_admin": false,
+            "user_name": "mike_jones",
+            "document": "987654321",
+            "permissions": ["finances"],
+            "email": "mike.jones@example.com",
+            "function": "Accountant",
+            "status": "pending",
+            "token": "pqr456789012",
+            "createdAt": "2023-03-10T08:45:00Z"
+        }
+    ],
+    "business-benefits": [
+        {
+            "id": "1",
+            "benefit_name": "Vale Alimentação",
+            "benefit_type": "pre_pago",
+            "short_description": "Com limite pré-definido, que possibilita atender as necessidades de compras do dia a dia do Beneficiado, em segmento(s) específico(s), determinado(s) pela Gestão, com desconto em folha de pagamento. Ex: Farmácias, Oficinas de Motos ou qualquer outro segmento, podendo ser de livre escolha."
+        },
+        {
+            "id": "2",
+            "benefit_name": "Adiantamento Salarial",
+            "benefit_type": "pos_pago",
+            "short_description": "Benefício específico para aquisição de gêneros alimentícios. Pode ser utilizado em supermercados, mercearias, açougues, padarias e similares. Facilitando as rotinas dos Empregadores na substituição das cestas básicas."
+        },
+        {
+            "id": "3",
+            "benefit_name": "Vale Refeição",
+            "benefit_type": "pre_pago",
+            "short_description": "Benefício específico para aquisição de refeições prontas. Pode ser utilizado em restaurantes, padarias, lanchonetes e similares. Facilitando a rotina dos Empregadores, quando da necessidade de ter que oferecer refeições, proporcionando mais qualidade de vida ao seus Colaboradores."
+
+        }
+    ]
+}

@@ -2,18 +2,19 @@ import EditTeamMemberForm from "@/components/Forms/TeamMember/editTeamMemberForm
 import users from '../my-team.json'
 import { BusinessUser } from "@/components/Dashboard/Tables/MyTeam/columns"
 import { EditTeamMemberTabs } from "@/components/Dashboard/Tabs/MyTeam/editTeamMemberTabs"
+import { fetchSingleTeamMember } from "@/app/lib/actions"
 
 
 export default async function MyTeamMemberDetails({ params }: {params: {
     id: string
 }}){
 
-    const data = users.find((user) => user.uuid === params.id) as BusinessUser
+    const result = await fetchSingleTeamMember(params.id)
 
     return (
         <main>
             
-            <EditTeamMemberTabs {...data}/>
+            <EditTeamMemberTabs {...result.data}/>
         </main>
     )
 }

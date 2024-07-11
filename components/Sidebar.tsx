@@ -102,7 +102,7 @@ export default function SideBar() {
             <div className="grow ">
                 <Command className=" flex h-full grow bg-soft " >
                     {/* <CommandInput placeholder="Pesquise algo..." /> */}
-                    <CommandList className="grow gap-2" >
+                    <CommandList className="grow gap-2 " >
                         {menuItems.map((cat, index) => (
                             <CommandGroup key={index} heading={cat.title} >
                                 {cat.list.map((item, itemIndex) => (

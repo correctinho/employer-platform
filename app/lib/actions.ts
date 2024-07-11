@@ -5,6 +5,8 @@ import { setupAPIClient } from "../services/api"
 import { auth } from "./auth"
 import { userInfoSchema, userInfoSchemaFirstSignIn } from "./zod/userValidations"
 import { dataSchemaZod } from "./zod/Company/validationDataSchema"
+import { setupAPIClientJSONServer } from "../services/api-json-server"
+import { AxiosError } from "axios"
 
 
 //Company
@@ -184,7 +186,43 @@ export async function fetchCompanyData() {
 
 }
 
+//Business team
 
+export async function fetchTeam(){
+  const api = await setupAPIClientJSONServer()
+
+  try{
+    const response = await api.get('/business-users')
+
+    return {status: response.status, data: response.data}
+  }catch(err: any){
+    if(err instanceof AxiosError){
+      return {status: err.status, data: ''}
+    }
+    return {status:'', data: ''}
+
+  }
+}
+
+//Get single business team
+export async function fetchSingleTeamMember(id: string){
+  const api = await setupAPIClientJSONServer()
+  
+  try{
+    const response = await api.get(`/business-users/${id}`)
+
+    return {status: response.status, data: response.data}
+
+  }catch(err: any){
+    if(err instanceof AxiosError){
+      return {status: err.status, data: ''}
+    }
+    return {status:'', data: ''}
+
+  }
+}
+
+//create team member
 export async function fetchEmployees(){
   const api = await setupAPIClient()
   const session = await auth()
@@ -199,6 +237,27 @@ export async function fetchEmployees(){
     if (err.response) return {data: err.response.data, status: err.response.data.error}
       
     return { status: '', data: ''}
+
+  }
+}
+
+//BUSINESS BENEFITS
+
+//get business benefits
+
+export async function fetchBusinessBenefits(){
+  const api = await setupAPIClientJSONServer()
+  
+  try{
+    const response = await api.get(`/business-benefits`)
+
+    return {status: response.status, data: response.data}
+
+  }catch(err: any){
+    if(err instanceof AxiosError){
+      return {status: err.status, data: ''}
+    }
+    return {status:'', data: ''}
 
   }
 }

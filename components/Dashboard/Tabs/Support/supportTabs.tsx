@@ -25,11 +25,14 @@ import {
 } from "@/components/ui/tooltip"
 
 import Image from "next/image"
+import Script from 'next/script'
 
 export function SupportTabs() {
 
     return (
         <Tabs defaultValue="support" className="w-full flex flex-col">
+            <Script src="https://app.aminos.ai/js/chat_form_plugin.js" data-bot-id="27177" strategy="beforeInteractive"></Script>
+
             <TabsList className="grid grow lg:grid-cols-1 max-lg:mb-12 ">
                 <TabsTrigger value="support">Suporte</TabsTrigger>
                 {/* <TabsTrigger value="allBenefits">Todos os multibenefícios</TabsTrigger>

@@ -1,6 +1,23 @@
-.button{
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader {
+    animation: spin 1s linear infinite;
+}
+
+.button {
     background-color: var(--text);
     padding: 10px;
     border-radius: 5px;
     color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonText {
+    color: inherit; /* Para herdar a cor do botão */
+    text-decoration: none; /* Para remover a sublinha do link */
 }

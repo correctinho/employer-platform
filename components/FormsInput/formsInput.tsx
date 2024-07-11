@@ -47,7 +47,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ options, selectedValue
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     const handleSelectAll = () => {
-        if (selectedValues.length === options.length) {
+        if (selectedValues!.length === options.length) {
             onChange([]);
         } else {
             onChange(options.map(option => option.value));

@@ -1,101 +1,87 @@
-"use client"
+"use client";
 
-import styles from '../../page.module.css'
+import styles from '../../page.module.css';
 import { z } from 'zod';
-
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-
 import { useRouter } from 'next/navigation';
-
 import { RiLockPasswordFill } from "react-icons/ri";
 import { HiIdentification } from "react-icons/hi2";
 import { MdAlternateEmail } from "react-icons/md";
 import Image from 'next/image';
 import { ButtonComp } from '@/components/FormsInput/Button/button';
-import { useState } from 'react';
-
+import { useState, useCallback } from 'react';
+import { toast } from 'react-toastify';
+import { Input } from '@/components/FormsInput/formsInput';
 
 export default function Home() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  async function login(formData: FormData) {
-    setLoading(true)
+  const login = useCallback(async (event: any) => {
+    event.preventDefault();
+    setLoading(true);
 
-    const { business_document, credential, password } = Object.fromEntries(formData)
+    const formData = new FormData(event.target);
+    const { business_document, credential, password } = Object.fromEntries(formData);
     if (!business_document || !credential || !password) {
-      alert("preencha tudo")
-      return
+      alert("Preencha tudo");
+      setLoading(false);
+      return;
     }
 
-    let emailValue = ''
-    let user_name = ''
+    let emailValue = '';
+    let user_name = '';
 
-
-    const emailValidation = z.string().email().safeParse(credential)
+    const emailValidation = z.string().email().safeParse(credential);
     if (emailValidation.success) {
-      emailValue = emailValidation.data
-
+      emailValue = emailValidation.data;
     } else {
       user_name = credential as string
-      emailValue = ''
     }
-    try {
 
+    try {
       const result = await signIn('credentials', {
         business_document,
         email: emailValue,
         user_name,
         password,
         redirect: false
-      })
-
-      
+      });
 
       if (result?.error) {
-        router.replace('/')
-        setLoading(false)
-
-        return
+        toast.error("Erro ao realizar o login");
+        setLoading(false);
+        return;
       }
-      setLoading(false)
 
-
-      router.replace('/dashboard')
-    } catch (err: any) {
-      setLoading(false)
-
-      console.log("Login error: ", err)
+      router.replace('/dashboard');
+    } catch (err) {
+      toast.error("Erro ao realizar o login");
+      setLoading(false);
+      console.log("Login error: ", err);
     }
-
-
-
-  }
+  }, [router]);
 
   return (
     <>
-
       <main className={styles.containerCenter}>
-        <div className={styles.backGround}>
-
-        </div>
+        <div className={styles.backGround}></div>
         <section className={styles.login}>
-
           <div className={styles.logoTop}>
             <h2>SysCorrect</h2>
             <h3>Plataforma Empregador</h3>
           </div>
 
-          <form action={login} className={styles.formLogin}>
+          <form onSubmit={login} className={styles.formLogin}>
             <h1>Faça seu login</h1>
 
             <section className={styles.containerInputsLogin}>
               <div className={styles.inputLogin}>
                 <label htmlFor="document">
-                  <HiIdentification size={20} />
+                  <HiIdentification size={25} />
                 </label>
-                <input
+                <Input
                   type="text"
                   name="business_document"
                   placeholder='CNPJ / CPF'
@@ -104,9 +90,9 @@ export default function Home() {
               </div>
               <div className={styles.inputLogin}>
                 <label htmlFor="credentials">
-                  <MdAlternateEmail size={20} />
+                  <MdAlternateEmail size={25} />
                 </label>
-                <input
+                <Input
                   type="text"
                   name="credential"
                   placeholder='Email ou nome de usuário'
@@ -115,16 +101,15 @@ export default function Home() {
               </div>
               <div className={styles.inputLogin}>
                 <label htmlFor="password">
-                  <RiLockPasswordFill size={20} />
+                  <RiLockPasswordFill size={25} />
                 </label>
-                <input
+                <Input
                   type="password"
                   name="password"
                   placeholder='Senha'
                   required
                 />
               </div>
-
             </section>
 
             <div className={styles.forgetPass}>
@@ -133,21 +118,18 @@ export default function Home() {
               </span>
             </div>
 
-            <ButtonComp loading={loading} style={{width: '100%'}}>
+            <ButtonComp loading={loading} style={{ width: '100%' }}>
               Entrar
             </ButtonComp>
-
           </form>
 
-
-          <Link href="/signup" className={styles.text}>Não possui conta ? Cadastre-se</Link>
+          <Link href="/signup" className={styles.text}>Não possui conta? Cadastre-se</Link>
 
           <div className={styles.logoBottom}>
-             <Image src='/logo-correct.png' height={200} width={200} alt='Logo Correct' />
+            <Image src='/logo-correct.png' height={200} width={200} alt='Logo Correct' />
           </div>
         </section>
-      </main >
-
+      </main>
     </>
-  )
+  );
 }
