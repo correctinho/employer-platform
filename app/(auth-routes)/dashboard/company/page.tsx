@@ -48,7 +48,6 @@ export default async function MyCompany() {
     const businessInfo = await fetchCompanyData()
     const data = businessInfo.data as BusinessInfoResponse
     const requestStatus = businessInfo.status
-
     return (
         <>
             <Suspense fallback={<LoadingComp />}>

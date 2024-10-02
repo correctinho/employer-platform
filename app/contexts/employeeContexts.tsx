@@ -17,7 +17,6 @@ export const EmployeeContext = createContext({} as EmployeeContextData)
 export function EmployeesProvider({ children }: EmployeeProviderProps) {
     async function getEmployees() {
         const result = await fetchEmployees()
-
         setEmployees(result.data)
     }
 

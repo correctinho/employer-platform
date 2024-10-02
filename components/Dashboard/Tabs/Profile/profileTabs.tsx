@@ -30,7 +30,6 @@ type ProfileTabsProps = {
 export function ProfileTabs(props: ProfileTabsProps) {
 
     const session = useSession()
-
     return (
         <Tabs defaultValue="account" className="w-full grow">
             <TabsList className="grid grow grid-cols-1 ">

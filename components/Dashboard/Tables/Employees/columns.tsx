@@ -53,7 +53,7 @@ export const columns: ColumnDef<EmployeeResponse>[] = [
         accessorKey: 'document',
         header: 'CPF'
     },
-    
+
     {
         accessorKey: 'status',
         header: ({ column }) => {
@@ -76,23 +76,24 @@ export const columns: ColumnDef<EmployeeResponse>[] = [
     },
     {
         accessorKey: 'date_of_birth',
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Data de nascimento
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            const date = new Date(row.getValue('date_of_birth'))
-            const formatted = date.toLocaleDateString()
-
-            return <div className="text-start font-medium">{formatted}</div>
-        },
+        header: "Data de nascimento"
+        // header: ({ column }) => {
+        //     return (
+        //         <Button
+        //             variant="ghost"
+        //             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        //         >
+        //             Data de nascimento
+        //             <ArrowUpDown className="ml-2 h-4 w-4" />
+        //         </Button>
+        //     )
+        // },
+        // cell: ({ row }) => {
+        //     const date = new Date(row.getValue('date_of_birth'))
+        //     const formatted = date.toLocaleDateString()
+        //   console.log({formatted})
+        //     return <div className="text-start font-medium">{formatted}</div>
+        // },
     },
     // {
     //     accessorKey: 'created_at',

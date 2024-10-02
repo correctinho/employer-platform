@@ -27,14 +27,14 @@ export type EmployeeResponse = {
     user_document_validation_uuid: string | null
     Address?: {
         uuid: string
-        line1: string
-        line2: string
+        line1: string | null
+        line2: string | null
         line3: string | null
-        postal_code: string
-        neighborhood: string
-        city: string
-        state: string
-        country: string
+        postal_code: string | null
+        neighborhood: string | null
+        city: string | null
+        state: string | null
+        country: string | null
     } | null
     UserValidation?: {
         uuid: string
@@ -44,8 +44,8 @@ export type EmployeeResponse = {
         document_selfie_status: string
         created_at: string | null
         updated_at: string | null
-    
-        
+
+
     } | null
     UserAuth?:{
         uuid: string

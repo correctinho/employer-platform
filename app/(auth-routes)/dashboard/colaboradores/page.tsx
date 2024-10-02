@@ -7,7 +7,6 @@ import { useContext, useEffect } from "react"
 
 export default function Employees() {
     const {employees, getEmployees} = useContext(EmployeeContext)
-        
     return (
         <div className="container mx-auto py-10">
             <DataTable columns={columns} data={employees} />

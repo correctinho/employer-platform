@@ -1,4 +1,4 @@
-import { fetchSingleEmployee } from "@/app/lib/actions"
+import { fetchSingleEmployeeInfo } from "@/app/lib/actions"
 import { EmployeeTabs } from "@/components/Dashboard/Tabs/Employee/employeeTabs"
 import { EmployeeResponse } from "@/utils/types/employee"
 
@@ -6,13 +6,12 @@ import { EmployeeResponse } from "@/utils/types/employee"
 export default async function EmployeeDetails({ params }: {params: {
     id: string
 }}){
-    
-    const result = await fetchSingleEmployee(params.id)
 
-    const data: EmployeeResponse = result.data
+    // const result = await fetchSingleEmployeeInfo(params.id)
+    // const data: EmployeeResponse = result.employeeInfo
     return(
         <main>
-            <EmployeeTabs  {...data}/>
+            <EmployeeTabs employeeId={params.id}/>
         </main>
     )
 }

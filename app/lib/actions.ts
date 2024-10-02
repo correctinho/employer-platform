@@ -7,7 +7,7 @@ import { userInfoSchema, userInfoSchemaFirstSignIn } from "./zod/userValidations
 import { dataSchemaZod } from "./zod/Company/validationDataSchema"
 
 
-//Company
+//Company Details
 export const updateCompanyUserDetails = async (formData: FormData) => {
   const api = await setupAPIClient()
   const session = await auth()
@@ -48,7 +48,9 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
         return { status: response.status, data: response.data }
 
       } catch (err: any) {
-        if (err.response.data) return err.response.data
+        console.log({err})
+        if (err.response) return { status: err.response.status, data: err.response.data }
+        return { status: '', data: '' }
 
         console.log("Erro ao atualizar dados do usuário: ", err)
       }
@@ -90,7 +92,7 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
 
 export const updateData = async (formData: FormData) => {
   const api = await setupAPIClient();
-
+  console.log({formData})
   const {
     data_uuid,
     address_uuid,
@@ -137,7 +139,7 @@ export const updateData = async (formData: FormData) => {
 
 
   try {
-    await api.patch(`/company-data?data_uuid=${data_uuid}&address_uuid=${address_uuid}`, {
+    const response = await api.patch(`/company-data?data_uuid=${data_uuid}&address_uuid=${address_uuid}`, {
       line1,
       line2,
       line3,
@@ -153,8 +155,12 @@ export const updateData = async (formData: FormData) => {
       phone_1,
       phone_2
     })
+
+    return { status: response.status, data: response.data }
+
   } catch (err: any) {
-    if (err.response.data) return err.response.data
+    if (err.response)  return { status: err.response.status, data: err.response.data }
+
     console.log("Unable to update data", err)
 
   }
@@ -174,7 +180,7 @@ export async function fetchCompanyData() {
     } catch (err: any) {
       //console.log("erro data: ", err)
       if (err.response) return {data: err.response.data, status: err.response.data.error}
-      
+
       return { status: '', data: ''}
       // return err.response.data.error
     }
@@ -193,30 +199,49 @@ export async function fetchEmployees(){
 
   try{
     const response = await api.get('/business-admin/app-users/')
-
     return { status: response.status, data: response.data}
   }catch(err: any){
     if (err.response) return {data: err.response.data, status: err.response.data.error}
-      
+
     return { status: '', data: ''}
 
   }
 }
 
-export async function fetchSingleEmployee(employeeId: string){
+export async function fetchSingleEmployeeInfo(employeeId: string){
   const api = await setupAPIClient()
   const session = await auth()
-
+  let address: any
   if(!session) return { status: 500, data: "Not logged in"}
 
   try{
     const response = await api.get(`/app-user/business-admin?employeeId=${employeeId}`)
 
-    return { status: response.status, data: response.data}
+    if(response.data.address_uuid){
+      const address = await api.get('')
+    }
+    return { status: response.status, employeeInfo: response.data, employeeAddress: address }
   }catch(err: any){
     if (err.response) return {data: err.response.data, status: err.response.data.error}
-      
+
     return { status: '', data: ''}
 
   }
+}
+
+
+//Company Items
+export const fetchAllCompanyItems = async () => {
+  const api = await setupAPIClient()
+
+  try{
+    const response = await api.get("/business/item/details")
+    return { status: response.status, data: response.data}
+
+  }catch(err: any){
+    if (err.response) return {data: err.response.data, status: err.response.data.error}
+    return { status: '', data: ''}
+
+  }
+
 }
