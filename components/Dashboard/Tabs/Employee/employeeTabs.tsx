@@ -72,7 +72,7 @@ export function EmployeeTabs(employeeId: EmployeTabsType) {
             <div className="grid lg:grid-cols-2 gap-2">
               <div>
                 <label htmlFor="">Salário</label>
-                <Input value={data?.salary ? data?.salary : ""} disabled />
+                <Input value={data?.salary ? +data?.salary / 100: ""} disabled />
               </div>
               <div>
                 <label htmlFor="">Cargo</label>

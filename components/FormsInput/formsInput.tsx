@@ -8,12 +8,13 @@ import { format } from 'date-fns';
 
 import "react-datepicker/dist/react-datepicker.css";
 import { ButtonComp } from './Button/button';
+import { ptBR } from 'date-fns/locale/pt-BR';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> { }
 interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> { }
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> { }
 
-// registerLocale("pt-BR", ptBR)
+registerLocale("pt-BR", ptBR)
 setDefaultLocale("pt-BR");
 
 interface CustomInputProps {
@@ -24,6 +25,7 @@ interface CustomInputProps {
   placeholder?: string
   autoComplete?: string
   defaultValue?: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 interface MultiSelectProps {
@@ -102,27 +104,76 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 });
 Input.displayName = "Input";
 
-export function DateSelect(props: CustomInputProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+// export function DateSelect(props: CustomInputProps) {
+//   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
+//   return (
+//     <div className='w-full flex items-center'>
+//       <ReactDatePicker
+//         selected={selectedDate}
+//         onChange={(date) => setSelectedDate(date)}
+//         name={props.name}
+//         maxDate={new Date()}
+//         dateFormat="dd/MM/yyyy"
+//         locale="pt-BR"
+//         className={styles.input}
+//         customInput={
+//           // <div className="flex cursor-pointer gap-3">
+//           //   {selectedDate ? format(new Date(selectedDate), "dd/MM/yyyy") : 'Selecione uma data'}
+//           //   <Calendar className='back' />
+//           // </div>
+//           <div className="flex cursor-pointer gap-3">
+//             <input
+//               type="text"
+//               name={props.name}
+//               value={selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""}
+//               readOnly
+//               className={styles.input}
+//             />
+//             <Calendar className='back' />
+//           </div>
+//         }
+//       />
+//     </div>
+//   );
+// }
+export function DateSelect(props: CustomInputProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+    if (props.onChange && date) {
+      props.onChange(date as any); // Chame a função onChange passada como prop
+    }
+  };
   return (
-    <div className='w-full'>
+    <div className='w-full flex items-center'
+>
       <ReactDatePicker
-        name={props.name}
+        selected={selectedDate}
+        onChange={handleDateChange}
         maxDate={new Date()}
         dateFormat="dd/MM/yyyy"
         locale="pt-BR"
-        className={styles.input}
-        onChange={(date) => setSelectedDate(date)}
+        showYearDropdown
+        showMonthDropdown
+        dropdownMode="select"
+        name={props.name}
+        className={`${styles.input} w-full`}
         customInput={
-          <div className="flex cursor-pointer gap-3">
-            {selectedDate ? format(new Date(selectedDate), "dd/MM/yyyy") : 'Selecione uma data'}
-            <Calendar className='back' />
-          </div>
+          <button type="button" className="w-full flex items-center cursor-pointer gap-2">
+            <span className='w-full' >
+              {selectedDate ? format(selectedDate, "dd/MM/yyyy") : 'Selecione uma data'}
+            </span>
+            <Calendar className='text-gray-500' />
+          </button>
         }
       />
+      {selectedDate && (
+        <input type="hidden" name={props.name} value={format(selectedDate, "dd/MM/yyyy")} />
+      )}
     </div>
-  )
+  );
 }
 DateSelect.displayName = "DateSelect";
 
@@ -136,6 +187,7 @@ export function MaskedDocumentInput(props: CustomInputProps) {
       id={props.id}
       readOnly={props.readOnly}
       className={styles.input}
+      onChange={props.onChange}
       mask={[
         { mask: '000.000.000-00', maxLength: 11 },
         { mask: '00.000.000/0000-00' }
@@ -149,23 +201,66 @@ export function MaskedDocumentInput(props: CustomInputProps) {
 }
 MaskedDocumentInput.displayName = "MaskedDocumentInput";
 
+export function MaskedCPFInput(props: CustomInputProps) {
+
+  return (
+    <IMaskInput
+      type={props.type}
+      name={props.name}
+      id={props.id}
+      readOnly={props.readOnly}
+      className={styles.input}
+      onChange={props.onChange}
+      mask={[
+        { mask: '000.000.000-00', maxLength: 11 }]}
+      defaultValue={props.defaultValue}
+      style={{
+        backgroundColor: !props.readOnly ? '' : 'rgba(101, 98, 143, 0.219)',
+      }}
+    />
+  )
+}
+MaskedCPFInput.displayName = "MaskedCPFInput";
+
+export function MaskedCNPJInput(props: CustomInputProps) {
+
+  return (
+    <IMaskInput
+      type={props.type}
+      name={props.name}
+      id={props.id}
+      readOnly={props.readOnly}
+      className={styles.input}
+      onChange={props.onChange}
+      mask={[
+        { mask: '00.000.000/0000-00' }
+      ]}
+      defaultValue={props.defaultValue}
+      style={{
+        backgroundColor: !props.readOnly ? '' : 'rgba(101, 98, 143, 0.219)',
+      }}
+    />
+  )
+}
+MaskedCNPJInput.displayName = "MaskedCPFInput";
 export function MaskedPhoneInput(props: CustomInputProps) {
 
   // const formattedValue = formatPhoneNumber(props.defaultValue || '');
 
   return (
     <IMaskInput
-        type={props.type}
-        name={props.name}
-        id={props.id}
-        readOnly={props.readOnly}
-        className={styles.input}
-        mask={'(00) 00000-0000'}
-        placeholder={props.placeholder}
-        defaultValue={props.defaultValue}
-        autoComplete={props.autoComplete}
-        style={{
-          backgroundColor: !props.readOnly ? '' : 'rgba(101, 98, 143, 0.219)',
+      type={props.type}
+      name={props.name}
+      id={props.id}
+      readOnly={props.readOnly}
+      className={styles.input}
+      mask={'(00) 00000-0000'}
+      placeholder={props.placeholder}
+      defaultValue={props.defaultValue}
+      autoComplete={props.autoComplete}
+      onChange={props.onChange}
+      style={{
+        backgroundColor: !props.readOnly ? '' : 'rgba(101, 98, 143, 0.219)',
 
       }}
     />
@@ -188,7 +283,7 @@ export function MaskedZipInput(props: CustomInputProps) {
       style={{
         backgroundColor: !props.readOnly ? '' : 'rgba(101, 98, 143, 0.219)',
 
-    }}
+      }}
     />
   )
 }

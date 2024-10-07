@@ -19,7 +19,7 @@ import { EmployeeResponse } from "@/utils/types/employee"
 
 
 const handleDelete = async () => {
-    alert("Produto deletado com sucesso")
+    alert("Usuário removido com sucesso")
 }
 
 // Mapeamento dos valores de status
@@ -136,7 +136,7 @@ export const columns: ColumnDef<EmployeeResponse>[] = [
                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
                         <Link href={`/dashboard/colaboradores/${employee.uuid}`}>
                             <DropdownMenuItem>
-                                Ver usuário
+                                Ver colaborador
                             </DropdownMenuItem>
                         </Link>
                         <DropdownMenuItem

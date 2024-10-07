@@ -49,8 +49,6 @@ export default function BusinessInfoForm(props: CompanyDataProps) {
 
     const router = useRouter()
     async function registerData(formData: FormData) {
-
-
         const response = await updateData(formData)
         type FormErrors = {
             [key: string]: string[] | undefined;
