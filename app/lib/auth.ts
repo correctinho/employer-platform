@@ -40,7 +40,7 @@ export const {
                         const headers = {
                             Authorization: `Bearer ${user.token}`
                         };
-                        
+
                         try {
                             const userDataResponse = await fetch(`${base_url}/business/admin/details`, {
                                 method: 'GET',
@@ -51,24 +51,24 @@ export const {
                             }
                             const userData = await userDataResponse.json();
                             // Atribuição dos dados de userData a user
-                            user.uuid = userData.uuid;
-                            user.business_info_id = userData.business_info_uuid;
-                            user.is_admin = userData.is_admin;
+                            user.uuid = userData.companyUserId;
+                            user.business_info_id = userData.businessInfoUuid;
+                            user.is_admin = userData.isAdmin;
                             user.document = userData.document;
                             user.name = userData.name;
                             user.email = userData.email;
-                            user.user_name = userData.user_name;
+                            user.user_name = userData.userName;
                             user.function = userData.function;
                             user.permissions = userData.permissions;
                             user.status = userData.status;
-                            user.business_status = userData.BusinessInfo.status
-                            
+                            //user.business_status = userData.BusinessInfo.status
+
                             return user;
                         } catch (error) {
                             console.error('Error fetching user data:', error);
                             return null;
                         }
-                        
+
                     }
 
                     return null
@@ -96,4 +96,3 @@ export const {
         ...authConfig.callbacks
     }
 })
-

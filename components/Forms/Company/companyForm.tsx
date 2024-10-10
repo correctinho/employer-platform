@@ -45,15 +45,11 @@ export type CompanyDataProps = {
 export default function BusinessInfoForm(props: CompanyDataProps) {
     const [editMode, setEditMode] = useState(props.availableData)
 
-    console.log({props})
     const [errorsMessage, setErrorsMessage] = useState<FormErrors>(null);
 
     const router = useRouter()
     async function registerData(formData: FormData) {
-
-
         const response = await updateData(formData)
-
         type FormErrors = {
             [key: string]: string[] | undefined;
         } | null;
@@ -79,6 +75,10 @@ export default function BusinessInfoForm(props: CompanyDataProps) {
 
         }
 
+        if(response?.status !== 200) {
+          toast.error("Erro ao atualizar dados")
+          return
+        }
 
 
         toast.success("Dados atualizados com sucesso")
@@ -95,6 +95,7 @@ export default function BusinessInfoForm(props: CompanyDataProps) {
             setEditMode(true)
         }
     }
+
 
     return (
         <div className="mt-4">
@@ -115,7 +116,7 @@ export default function BusinessInfoForm(props: CompanyDataProps) {
                                     type='text'
                                     name='document'
                                     id='document'
-                                    readOnly={editMode}
+                                    readOnly
                                     defaultValue={props.document}
                                 />
                                 {errorsMessage?.document && (
@@ -189,8 +190,9 @@ export default function BusinessInfoForm(props: CompanyDataProps) {
                                     type='tel'
                                     id='phone_1'
                                     autoComplete='phone_1'
-                                    defaultValue={props.phone_1}
                                     readOnly={editMode}
+                                    defaultValue={props.phone_1}
+
                                 />
                                 {errorsMessage?.phone_1 && (
                                     <p className={styles.errorMessage}>{errorsMessage.phone_1.map((error, index) => (
@@ -382,6 +384,7 @@ export default function BusinessInfoForm(props: CompanyDataProps) {
                             cursor: !editMode ? 'pointer' : 'auto'
 
                         }}
+                        disabled={editMode}
                     >Salvar Dados</Button>
 
                 </div>

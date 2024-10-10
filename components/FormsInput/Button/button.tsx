@@ -1,27 +1,32 @@
-import { ReactNode, ButtonHTMLAttributes } from 'react'
-import styles from './styles.module.css'
+'use client'
 
-import { Loader } from 'lucide-react'
+import { ReactNode, ButtonHTMLAttributes } from 'react';
+import styles from './styles.module.css';
+import { Loader } from 'lucide-react';
+import { useFormStatus } from 'react-dom';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    loading?: boolean,
-    children: ReactNode
+  children: ReactNode
 }
-export function ButtonComp({ loading, children, ...rest }: ButtonProps) {
-    return (
-        <button
-            className={styles.button}
-            disabled={loading}
-            {...rest}
-        >
-            {loading ? (
-                // <FaSpinner color="#fff" size={16} />
-                <Loader />
-            ) : (<a className={styles.buttonText}>
-                {children}
-            </a>)
-            }
 
-        </button>
-    )
+export function ButtonComp({ onClick, children, ...rest }: ButtonProps) {
+  const { pending } = useFormStatus()
+
+  return (
+    <button
+      onClick={onClick}
+      className={styles.button}
+      disabled={pending}
+      type='submit'
+      {...rest}
+    >
+      {pending ? (
+        <Loader className={styles.loader} />
+      ) : (
+        <span className={styles.buttonText}>
+          {children}
+        </span>
+      )}
+    </button>
+  );
 }

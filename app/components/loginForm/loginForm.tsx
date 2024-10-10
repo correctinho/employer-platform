@@ -18,10 +18,8 @@ import { useState } from 'react';
 
 export default function Home() {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
 
   async function login(formData: FormData) {
-    setLoading(true)
 
     const { business_document, credential, password } = Object.fromEntries(formData)
     if (!business_document || !credential || !password) {
@@ -51,20 +49,17 @@ export default function Home() {
         redirect: false
       })
 
-      
+
 
       if (result?.error) {
         router.replace('/')
-        setLoading(false)
 
         return
       }
-      setLoading(false)
 
 
       router.replace('/dashboard')
     } catch (err: any) {
-      setLoading(false)
 
       console.log("Login error: ", err)
     }
@@ -133,7 +128,7 @@ export default function Home() {
               </span>
             </div>
 
-            <ButtonComp loading={loading} style={{width: '100%'}}>
+            <ButtonComp style={{width: '100%'}}>
               Entrar
             </ButtonComp>
 

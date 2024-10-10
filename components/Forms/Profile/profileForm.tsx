@@ -31,7 +31,6 @@ type FormErrors = {
 
 
 export default function ProfileForm(props: UserInfoProps) {
-
     const [errorsMessage, setErrorsMessage] = useState<FormErrors>(null);
     const [passwordFieldIsVisible, setPasswordIsVisible] = useState(false)
 
@@ -40,6 +39,7 @@ export default function ProfileForm(props: UserInfoProps) {
     const handleSubmitFirstSignIn = async (formData: FormData) => {
 
         const response = await updateCompanyUserDetails(formData)
+        console.log('resposta: ', response.data)
         if (response.status === 200) {
             toast.success("Dados atualizados com sucesso")
             await signOut()
