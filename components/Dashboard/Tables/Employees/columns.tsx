@@ -77,44 +77,9 @@ export const columns: ColumnDef<EmployeeResponse>[] = [
     {
         accessorKey: 'date_of_birth',
         header: "Data de nascimento"
-        // header: ({ column }) => {
-        //     return (
-        //         <Button
-        //             variant="ghost"
-        //             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        //         >
-        //             Data de nascimento
-        //             <ArrowUpDown className="ml-2 h-4 w-4" />
-        //         </Button>
-        //     )
-        // },
-        // cell: ({ row }) => {
-        //     const date = new Date(row.getValue('date_of_birth'))
-        //     const formatted = date.toLocaleDateString()
-        //   console.log({formatted})
-        //     return <div className="text-start font-medium">{formatted}</div>
-        // },
-    },
-    // {
-    //     accessorKey: 'created_at',
-    //     header: ({ column }) => {
-    //         return (
-    //             <Button
-    //                 variant="ghost"
-    //                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //             >
-    //                 Registrado em
-    //                 <ArrowUpDown className="ml-2 h-4 w-4" />
-    //             </Button>
-    //         )
-    //     },
-    //     cell: ({ row }) => {
-    //         const date = new Date(row.getValue('created_at'))
-    //         const formatted = date.toLocaleDateString()
 
-    //         return <div className="text-start font-medium">{formatted}</div>
-    //     },
-    // },
+    },
+
     {
         accessorKey: 'group',
         header: 'Grupo'
@@ -139,11 +104,11 @@ export const columns: ColumnDef<EmployeeResponse>[] = [
                                 Ver colaborador
                             </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem
+                        {/* <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(employee.uuid)}
                         >
                             Copiar Id
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuSeparator />
 
                         <AlertDialogDemo

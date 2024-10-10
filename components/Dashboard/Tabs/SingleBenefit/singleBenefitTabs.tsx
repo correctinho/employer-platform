@@ -1,8 +1,9 @@
 'use client'
 
 import { EmployeeContext } from "@/app/contexts/employeeContexts"
-import { fetchAllCompanyItems } from "@/app/lib/actions"
-import { Button } from "@/components/ui/button"
+import { DataTable } from "@/components/Dashboard/Tables/EmployeesWithBenefits/data-table"
+import { columns } from "@/components/Dashboard/Tables/EmployeesWithBenefits/columns"
+
 import {
   Card,
   CardContent,
@@ -20,36 +21,37 @@ import {
 import Link from "next/link"
 import { useContext } from "react"
 
+type SingleBenefitProps = {
+  uuid: string,
+  item_name: string,
+  item_type: string
+  item_uuid: string,
+  business_info_uuid: string,
+  cycle_start_day: string | null,
+  cycle_end_day: string | null
+  created_at: string
+}
+export function SingleBenefitsTabs(props: SingleBenefitProps) {
+  const { benefits, employees } = useContext(EmployeeContext)
+  console.log({ benefits })
 
-export function BenefitsTabs() {
-  const { benefits } = useContext(EmployeeContext)
   return (
     <Tabs defaultValue="benefits" className="w-full flex flex-col">
-      <TabsList className="grid grow lg:grid-cols-3 max-lg:mb-12 ">
-        <TabsTrigger value="benefits">Meus multibenefícios</TabsTrigger>
-        <TabsTrigger value="allBenefits">Todos os multibenefícios</TabsTrigger>
-        <TabsTrigger value="advantage">Clube de vantagens</TabsTrigger>
+      <TabsList className="grid grow lg:grid-cols-2 max-lg:mb-12 ">
+        <TabsTrigger value="benefits">Gerenciar multibeneficio</TabsTrigger>
+        <TabsTrigger value="allBenefits">Detalhes</TabsTrigger>
       </TabsList>
-      <TabsContent value="benefits" className="grid lg:grid-cols-3 gap-[32px]">
-        {benefits.map((benefit) => (
-          <Card className="p-4 flex flex-col items-center gap-4 justify-between" key={benefit.id}>
-            <CardTitle>{benefit.Item.name}</CardTitle>
-            <CardDescription style={{ lineHeight: "1.5rem" }}>{benefit.Item.description}</CardDescription>
-            <Link href={`/dashboard/multibeneficios/${benefit.uuid}`}>
-              <Button variant="outline">Ver mais</Button>
-            </Link>
-          </Card>
+      <TabsContent value="benefits" className="grid lg:grid-cols-1 bg-slate-100 gap-[32px]">
 
-        ))}
-        {/* <Card className=" overflow-y-scroll w-fit">
-                    <CardHeader>
-                        <CardTitle>Esta semana</CardTitle>
-                        <CardDescription>Resultados semanais</CardDescription>
-                    </CardHeader>
-                    <div className="px-4">
-                        <DataTableDemo />
-                    </div>
-                </Card> */}
+        <Card className=" overflow-y-scroll w-full">
+          <CardHeader>
+            <CardTitle>{props.item_name}</CardTitle>
+            <CardDescription>Defina os colabodores que receberão este benefício</CardDescription>
+          </CardHeader>
+          <div className="px-4">
+            <DataTable columns={columns} data={employees} />
+          </div>
+        </Card>
       </TabsContent>
 
       {/* <TabsContent value="password">

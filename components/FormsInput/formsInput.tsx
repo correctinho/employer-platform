@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes, useState, forwardRef } from 'react'
+import { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes, useState, forwardRef, useEffect } from 'react'
 import styles from './formsInput.module.css'
 import { IMaskInput } from 'react-imask'
 
@@ -25,7 +25,9 @@ interface CustomInputProps {
   placeholder?: string
   autoComplete?: string
   defaultValue?: string
+  value?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onValueChange?: (value: string) => void;
 }
 
 interface MultiSelectProps {
@@ -72,16 +74,18 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ options, selectedValue
 
   return (
     <div className="border rounded p-2 w-full">
-      <ButtonComp type="button" onClick={handleSelectAll}>
-        {selectedValues.length === options.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
-      </ButtonComp>
-      <input
-        type="text"
-        placeholder={searchText}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border rounded p-2 w-full mb-2"
-      />
+      <div className='flex flex-col md:flex-row items-center md:space-x-4 gap-2'>
+        <input
+          type="text"
+          placeholder={searchText}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border rounded p-2 w-full"
+        />
+        <button type="button" onClick={handleSelectAll} className='bg-slate-800 p-2 border rounded text-white md:w-full'>
+          {selectedValues.length === options.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
+        </button>
+      </div>
       <ul className="max-h-60 overflow-y-auto">
         {filteredOptions.map(option => (
           <li key={option.value} className="flex items-center gap-2">
@@ -104,39 +108,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 });
 Input.displayName = "Input";
 
-// export function DateSelect(props: CustomInputProps) {
-//   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-//   return (
-//     <div className='w-full flex items-center'>
-//       <ReactDatePicker
-//         selected={selectedDate}
-//         onChange={(date) => setSelectedDate(date)}
-//         name={props.name}
-//         maxDate={new Date()}
-//         dateFormat="dd/MM/yyyy"
-//         locale="pt-BR"
-//         className={styles.input}
-//         customInput={
-//           // <div className="flex cursor-pointer gap-3">
-//           //   {selectedDate ? format(new Date(selectedDate), "dd/MM/yyyy") : 'Selecione uma data'}
-//           //   <Calendar className='back' />
-//           // </div>
-//           <div className="flex cursor-pointer gap-3">
-//             <input
-//               type="text"
-//               name={props.name}
-//               value={selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""}
-//               readOnly
-//               className={styles.input}
-//             />
-//             <Calendar className='back' />
-//           </div>
-//         }
-//       />
-//     </div>
-//   );
-// }
 export function DateSelect(props: CustomInputProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -148,7 +120,7 @@ export function DateSelect(props: CustomInputProps) {
   };
   return (
     <div className='w-full flex items-center'
->
+    >
       <ReactDatePicker
         selected={selectedDate}
         onChange={handleDateChange}
@@ -295,3 +267,80 @@ export function TextArea({ ...rest }: TextAreaProps) {
   )
 }
 TextArea.displayName = "TextArea";
+
+
+export function CurrencyInput({ name, placeholder, onValueChange, value: propValue }: CustomInputProps) {
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
+  const [displayValue, setDisplayValue] = useState<string>(
+    propValue ? formatCurrency(Number(propValue)) : "R$ 0,00"
+  );
+
+  const parseCurrency = (value: string): number => {
+    const cleanedValue = value.replace(/\D/g, '');
+    return Number(cleanedValue) / 100;
+  };
+
+  const handleTotalValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    const numericValue = parseCurrency(inputValue);
+
+    setDisplayValue(formatCurrency(numericValue));
+
+    // Pass the raw value multiplied by 100 to the parent component
+    if (onValueChange) {
+      onValueChange((numericValue * 100).toFixed(0)); // Arredonda para o inteiro mais próximo
+    }
+  };
+
+  return (
+    <input
+      type="text"
+      value={displayValue}
+      placeholder={placeholder}
+      onChange={handleTotalValueChange}
+      name={name}
+      className={styles.input}
+    />
+  );
+}
+
+interface BenefitToggleProps {
+  employeeId: string;
+  initialState: boolean;
+  onToggle: (employeeId: string, isActive: boolean) => void;
+}
+
+export const BenefitToggle: React.FC<BenefitToggleProps> = ({ employeeId, initialState, onToggle }) => {
+  const [isActive, setIsActive] = useState(initialState);
+
+  const handleToggle = () => {
+      const newState = !isActive;
+      setIsActive(newState);
+      onToggle(employeeId, newState);
+  };
+
+  return (
+      <div className="flex items-center">
+          <button
+              onClick={handleToggle}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                  isActive ? 'bg-green-500' : 'bg-gray-200'
+              }`}
+          >
+              <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                      isActive ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+              />
+          </button>
+          <span className="ml-2">{isActive ? 'Ativo' : 'Inativo'}</span>
+      </div>
+  );
+};
+BenefitToggle.displayName = "BenefitToggle";

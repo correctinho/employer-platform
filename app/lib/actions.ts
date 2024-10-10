@@ -214,9 +214,6 @@ export async function fetchSingleEmployeeInfo(employeeId: string) {
   try {
     const response = await api.get(`/app-user/business-admin?employeeId=${employeeId}`)
 
-    if (response.data.address_uuid) {
-      const address = await api.get('')
-    }
     return { status: response.status, employeeInfo: response.data, employeeAddress: address }
   } catch (err: any) {
     if (err.response) return { data: err.response.data, status: err.response.data.error }
@@ -281,12 +278,89 @@ export async function registerSingleEmployee(formData: FormData) {
 
   }
 }
+
 //Company Items
 export const fetchAllCompanyItems = async () => {
   const api = await setupAPIClient()
 
   try {
     const response = await api.get("/business/item/details")
+    return { status: response.status, data: response.data }
+
+  } catch (err: any) {
+    if (err.response) return { data: err.response.data, status: err.response.data.error }
+    return { status: '', data: '' }
+
+  }
+
+}
+
+export const fetchSingleCompanyItem = async (id: string) => {
+  const api = await setupAPIClient()
+  try {
+    const response = await api.get(`/business/item/details/${id}/employer`)
+    return { status: response.status, data: response.data }
+
+  } catch (err: any) {
+    if (err.response) return { data: err.response.data, status: err.response.data.error }
+    return { status: '', data: '' }
+
+  }
+}
+
+//Groups
+export const createNewGroup = async (formData: FormData) => {
+  const api = await setupAPIClient()
+
+  try {
+    const {
+      group_name,
+      employerItemDetails_uuids,
+      value,
+      user_info_uuids
+    } = Object.fromEntries(formData)
+
+
+    const parsedEmployerItemDetailsUuids = JSON.parse(employerItemDetails_uuids as string);
+    const parsedUserInfoUuids = JSON.parse(user_info_uuids as string);
+    const response = await api.post("/business-admin/group", {
+      group_name,
+      employerItemDetails_uuids: parsedEmployerItemDetailsUuids,
+      value: +value,
+      user_info_uuids: parsedUserInfoUuids,
+    })
+
+    return { status: response.status, data: response.data }
+
+  } catch (err: any) {
+    if (err.response) return { data: err.response.data, status: err.response.data.error }
+    return { status: '', data: '' }
+
+  }
+}
+
+export const fetchAllBenefitGroups = async () => {
+  const api = await setupAPIClient()
+
+  try {
+    const response = await api.get("/business-admin/groups")
+
+    return { status: response.status, data: response.data }
+
+  } catch (err: any) {
+    if (err.response) return { data: err.response.data, status: err.response.data.error }
+    return { status: '', data: '' }
+
+  }
+
+}
+
+export const fetchOneBenefitGroup = async (id: string) => {
+  const api = await setupAPIClient()
+
+  try {
+   const response = await api.get(`/business-admin/group?uuid=${id}`)
+
     return { status: response.status, data: response.data }
 
   } catch (err: any) {

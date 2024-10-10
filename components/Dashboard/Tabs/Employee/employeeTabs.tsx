@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/FormsInput/formsInput";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EmployeeResponse } from "@/utils/types/employee";
 import { TabsContent } from "@radix-ui/react-tabs";
 import {
   Card,
