@@ -16,15 +16,12 @@ type EmployeeProviderProps = {
 }
 export const EmployeeContext = createContext({} as EmployeeContextData)
 
-
-
-
-
 export function EmployeesProvider({ children }: EmployeeProviderProps) {
   const [benefits, setBenefits] = useState<EmployeeResponse[]>([])
 
   async function getEmployees() {
     const result = await fetchEmployees()
+    console.log(result.data)
     setEmployees(result.data)
   }
 

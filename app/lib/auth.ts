@@ -51,13 +51,13 @@ export const {
                             }
                             const userData = await userDataResponse.json();
                             // Atribuição dos dados de userData a user
-                            user.uuid = userData.companyUserId;
-                            user.business_info_id = userData.businessInfoUuid;
-                            user.is_admin = userData.isAdmin;
+                            user.uuid = userData.uuid;
+                            user.business_info_id = userData.business_info_uuid;
+                            user.is_admin = userData.is_admin;
                             user.document = userData.document;
                             user.name = userData.name;
                             user.email = userData.email;
-                            user.user_name = userData.userName;
+                            user.user_name = userData.user_name;
                             user.function = userData.function;
                             user.permissions = userData.permissions;
                             user.status = userData.status;

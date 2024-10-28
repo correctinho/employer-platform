@@ -7,7 +7,6 @@ import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 
 import "react-datepicker/dist/react-datepicker.css";
-import { ButtonComp } from './Button/button';
 import { ptBR } from 'date-fns/locale/pt-BR';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> { }
@@ -26,6 +25,7 @@ interface CustomInputProps {
   autoComplete?: string
   defaultValue?: string
   value?: string
+  disabled?:boolean
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onValueChange?: (value: string) => void;
 }
@@ -189,6 +189,8 @@ export function MaskedCPFInput(props: CustomInputProps) {
       style={{
         backgroundColor: !props.readOnly ? '' : 'rgba(101, 98, 143, 0.219)',
       }}
+      disabled={props.disabled}
+      placeholder={props.placeholder}
     />
   )
 }

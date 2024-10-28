@@ -14,21 +14,11 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
-import ProfileForm from "@/components/Forms/Profile/profileForm"
-import { useSession } from "next-auth/react"
-import Image from "next/image"
 import NewTeamMemberForm from "@/components/Forms/TeamMember/newTeamMemberForm"
 
 
 export function NewTeamMemberTabs() {
 
-    const session = useSession()
 
     return (
         <Tabs defaultValue="account" className="w-full grow">
@@ -50,14 +40,14 @@ export function NewTeamMemberTabs() {
                             <span>Vendas</span>
                             <ul>
                                 <li>PDV</li>
-                                
+
                             </ul>
                         </div>
                         <div>
                             <span>Finanças</span>
                             <ul>
                                 <li>PDV</li>
-                                
+
                             </ul>
                         </div> */}
                     </CardContent>
