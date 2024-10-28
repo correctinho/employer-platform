@@ -33,7 +33,6 @@ type SingleBenefitProps = {
 }
 export function SingleBenefitsTabs(props: SingleBenefitProps) {
   const { benefits, employees } = useContext(EmployeeContext)
-  console.log({ benefits })
 
   return (
     <Tabs defaultValue="benefits" className="w-full flex flex-col">

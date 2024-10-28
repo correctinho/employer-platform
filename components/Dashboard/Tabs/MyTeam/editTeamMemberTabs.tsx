@@ -3,7 +3,6 @@
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -14,23 +13,13 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
-import ProfileForm from "@/components/Forms/Profile/profileForm"
-import { useSession } from "next-auth/react"
-import Image from "next/image"
-import NewTeamMemberForm from "@/components/Forms/TeamMember/newTeamMemberForm"
 import EditTeamMemberForm from "@/components/Forms/TeamMember/editTeamMemberForm"
 import { BusinessUser } from "../../Tables/MyTeam/columns"
 import { Input } from "@/components/FormsInput/formsInput"
 import { ButtonComp } from "@/components/FormsInput/Button/button"
 
 
-export function EditTeamMemberTabs(props: BusinessUser) {
+export function EditTeamMemberTabs(data: { user: BusinessUser }) {
 
 
     return (
@@ -42,7 +31,7 @@ export function EditTeamMemberTabs(props: BusinessUser) {
             </TabsList>
             <TabsContent value="team-member-data" className="grid lg:grid-cols-2 gap-[32px]">
 
-                <EditTeamMemberForm {...props} />
+                <EditTeamMemberForm {...data.user} />
 
                 <Card className="border-hidden">
                     <CardHeader>
@@ -53,14 +42,14 @@ export function EditTeamMemberTabs(props: BusinessUser) {
                             <span>Vendas</span>
                             <ul>
                                 <li>PDV</li>
-                                
+
                             </ul>
                         </div>
                         <div>
                             <span>Finanças</span>
                             <ul>
                                 <li>PDV</li>
-                                
+
                             </ul>
                         </div> */}
                     </CardContent>
@@ -72,7 +61,7 @@ export function EditTeamMemberTabs(props: BusinessUser) {
                     <CardHeader>
                         <CardTitle>Altere a senha</CardTitle>
                     </CardHeader>
-                    
+
                     <CardContent className="space-y-2">
                         <form action="" className="flex flex-col gap-3">
                             <div>

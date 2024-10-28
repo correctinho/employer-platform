@@ -6,23 +6,20 @@ import { auth } from "./auth"
 import { userInfoSchema, userInfoSchemaFirstSignIn } from "./zod/userValidations"
 import { dataSchemaZod } from "./zod/Company/validationDataSchema"
 import { registerEmployeedataSchemaZod } from "./zod/Employees/registerEmployeeValidationDataSchema"
+import { CompanyUser } from "../(auth-routes)/dashboard/minha-equipe/page"
+import { revalidatePath } from "next/cache"
 
 
 //Company Details
 export const updateCompanyUserDetails = async (formData: FormData) => {
   const api = await setupAPIClient()
   const session = await auth()
-
   let { name, user_name, document, new_password, confirm_password } = Object.fromEntries(formData)
+
 
   if (session) {
 
     if (session.user.status === 'pending_password') {
-
-      if (session.user.document) {
-        document = session.user.document
-      }
-
       const result = userInfoSchemaFirstSignIn.safeParse({
         name,
         user_name,
@@ -37,9 +34,10 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
 
       try {
 
-        const response = await api.patch(`/company-user?user_id=${session.user.uuid}`, {
-          name: name,
-          user_name: user_name,
+        const response = await api.put(`/company-admin`, {
+          uuid: session.user.uuid,
+          name: name ? name : null,
+          user_name: user_name ? user_name : null,
           document: document,
           password: new_password,
           status: 'active'
@@ -63,15 +61,15 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
         confirm_password
       })
 
-
       if (!result.success) {
         return { error: result.error.issues }
       }
 
       try {
-        const response = await api.patch(`/company-user?user_id=${session.user.uuid}`, {
-          name: name,
-          user_name: user_name,
+        const response = await api.put(`/company-admin`, {
+          uuid: session.user.uuid,
+          name: name ? name : null,
+          user_name: user_name ? user_name : null,
           document: document,
           password: new_password,
         })
@@ -80,8 +78,8 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
         return { status: response.status, data: response.data }
 
       } catch (err: any) {
-        if (err.response.data) return err.response.data
-        console.log("Erro ao atualizar dados: ", err)
+        if (err.response) return { status: err.response.status, data: err.response.data }
+        return { status: "", data: "" }
 
       }
     }
@@ -195,7 +193,8 @@ export async function fetchEmployees() {
   if (!session) return { status: 500, data: "Not logged in" }
 
   try {
-    const response = await api.get('/business-admin/app-users/')
+    const response = await api.get('/business-admin/app-users')
+    console.log("empregados", response.data)
     return { status: response.status, data: response.data }
   } catch (err: any) {
     if (err.response) return { data: err.response.data, status: err.response.data.error }
@@ -252,13 +251,15 @@ export async function registerSingleEmployee(formData: FormData) {
       salary: isNaN(Number(salary)) ? null : Number(salary),
       dependents_quantity: setDependents
     })
+    console.log(result.error?.issues[0].message)
     if (!result.success) {
+      console.log("aqui back")
       return { error: result.error.issues }
     }
 
     const response = await api.post("app-user/business-admin", {
       full_name,
-      internal_code,
+      internal_company_code: internal_code,
       document,
       gender,
       date_of_birth,
@@ -268,10 +269,11 @@ export async function registerSingleEmployee(formData: FormData) {
       dependents_quantity: +dependents_quantity
     })
 
-
+    console.log(response.data)
     return { status: response.status, data: response.data }
 
   } catch (err: any) {
+    console.log({err})
     if (err.response) return { data: err.response.data.error, status: err.response.data.error }
 
     return { status: '', data: '' }
@@ -308,6 +310,92 @@ export const fetchSingleCompanyItem = async (id: string) => {
   }
 }
 
+//Company Users
+export const fetchCompanyUsers = async (business_info_uuid: string) => {
+  const api = await setupAPIClient();
+
+  try {
+    const response = await api.get(`/company-users?business_info_uuid=${business_info_uuid}`);
+    const users = response.data
+
+    return  users
+  } catch (err: any) {
+    if (err.response) return err.response.data
+
+  }
+};
+
+export const addUser = async (formData: FormData) => {
+  const api = await setupAPIClient();
+  const { user_name, password, permissions } = Object.fromEntries(formData)
+  const parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : [];
+  try {
+    const response = await api.post("/business/admin/register/user", {
+      password,
+      user_name,
+      permissions: parsedPermissions
+    })
+
+    return {status: response.status, data: response.data}
+
+  } catch (err: any) {
+    if (err.response) return {data: err.response.data.error, status: err.response.status}
+    console.log("Erro ao criar usuário", err)
+  }
+}
+
+export const fetchSingleUser = async (user_uuid: string) => {
+
+  const api = await setupAPIClient();
+
+  try {
+    const response = await api.get(`/business/admin/details/user?user_uuid=${user_uuid}`);
+
+    return {status: response.status, data: response.data}
+
+  } catch (err: any) {
+    if (err.response) return {data: err.response.data.error, status: err.response.status}
+    console.log({ err });
+  }
+};
+
+export const editUser = async (formData: FormData) => {
+  const api = await setupAPIClient()
+
+  const { user_id, password, permissions, is_active, user_name } = Object.fromEntries(formData)
+  const parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : [];
+
+  try {
+    await api.patch(`/company-user?user_id=${user_id}`, {
+      password,
+      user_name,
+      permissions: parsedPermissions,
+      status: is_active
+    })
+
+
+  } catch (err: any) {
+    console.log({err})
+    if (err.response) return {data: err.response.data.error, status: err.response.status}
+    return {data: '', status: ''}
+  }
+  revalidatePath('/dashboard/minha-equipe')
+  redirect('/dashboard/minha-equipe')
+}
+
+export const deleteUser = async (id: string) => {
+  const api = await setupAPIClient()
+
+  try {
+    await api.patch(`/company-user/delete?user_id=${id}`)
+
+  } catch (err: any) {
+    console.log("Erro ao deletar usuário: ", err)
+
+
+  }
+  revalidatePath('/dashboard/minha-equipe')
+}
 //Groups
 export const createNewGroup = async (formData: FormData) => {
   const api = await setupAPIClient()

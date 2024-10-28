@@ -3,6 +3,7 @@
 import { registerSingleEmployee } from "@/app/lib/actions"
 import { ButtonComp } from "@/components/FormsInput/Button/button"
 import { DateSelect, Input, MaskedCPFInput, MaskedDocumentInput, Select } from "@/components/FormsInput/formsInput"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useFormStatus } from "react-dom"
 import { toast } from "react-toastify"
@@ -12,13 +13,12 @@ type FormErrors = {
   [key: string]: string[] | undefined;
 } | null;
 
-let activate: boolean
 
 export default function NewEmployee() {
   const [errorsMessage, setErrorsMessage] = useState<FormErrors>(null);
   const [salary, setSalary] = useState<string>('');
-  const [loading, setLoading] = useState(false)
 
+  const router = useRouter()
   const addNew = async (formData: FormData) => {
 
     const numericSalary = parseInt(salary.replace(/[^\d,]/g, ''), 10) * 100;
@@ -28,8 +28,8 @@ export default function NewEmployee() {
     if (!formData.has('date_of_birth') || formData.get('date_of_birth') === "") {
       formData.set('date_of_birth', ''); // Define um valor padrão vazio
     }
-
     const response = await registerSingleEmployee(formData)
+
     if (response?.error) {
       const formattedErrors: FormErrors = {};
 
@@ -61,8 +61,7 @@ export default function NewEmployee() {
     }
 
     toast.success("Colaborador registrado com sucesso")
-    setLoading(false)
-
+    router.replace("/dashboard/colaboradores")
   }
 
 
@@ -206,7 +205,7 @@ export default function NewEmployee() {
         </div>
 
         <div className="">
-          <label htmlFor="">Salário</label>
+          <label htmlFor="">Salário *</label>
           <Input
             type="text"
             name="salary"
@@ -214,6 +213,11 @@ export default function NewEmployee() {
             placeholder="R$"
             value={salary}
           />
+          {errorsMessage?.salary && (
+            <p className="text-red-600">{errorsMessage.salary.map((error, index) => (
+              <span key={index}>{error}</span>
+            ))}</p>)}
+
         </div>
         <ButtonComp>Cadastrar</ButtonComp>
       </form>

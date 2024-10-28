@@ -14,6 +14,7 @@ import { MdAlternateEmail } from "react-icons/md";
 import Image from 'next/image';
 import { ButtonComp } from '@/components/FormsInput/Button/button';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 export default function Home() {
@@ -60,7 +61,7 @@ export default function Home() {
 
       router.replace('/dashboard')
     } catch (err: any) {
-
+      toast.error("Erro ao realizar o login")
       console.log("Login error: ", err)
     }
 

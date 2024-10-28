@@ -32,5 +32,7 @@ export const registerEmployeedataSchemaZod = z.object({
     .string()
     .min(1, { message: "Cargo é obrigatório" }),
   salary: z
-    .optional(z.number()),
+    .number()
+    .min(1, { message: "Salário é obrigatório" }),
+
 })

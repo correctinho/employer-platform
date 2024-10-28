@@ -11,7 +11,6 @@ export const authConfig = {
 
         jwt: async ({ token, user, trigger, session }) => {
             if (trigger === "signIn") {
-
                 user && (token.user = user)
 
                 return token
@@ -25,8 +24,6 @@ export const authConfig = {
         },
         session: async ({ session, token }: any) => {
             session.user = token.user
-
-
             return session
         },
         authorized: async ({ auth, request: { nextUrl } }) => {
@@ -42,7 +39,7 @@ export const authConfig = {
             if (isOnLoginPage && isLoggedIn && !isOnHomePage) {
                 return NextResponse.redirect(new URL("/dashboard", nextUrl));
             }
-           
+
             if(isLoggedIn && session.status === 'pending_password' && !isOnProfilePage){
                 return NextResponse.redirect(new URL("/dashboard/settings/profile", nextUrl));
             }
@@ -52,7 +49,3 @@ export const authConfig = {
 
     }
 } satisfies NextAuthConfig;
-
-
-
-

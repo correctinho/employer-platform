@@ -33,6 +33,15 @@ import React from "react"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
+// Mapeamento dos IDs das colunas para seus nomes em português
+const columnNamesMap: { [key: string]: string } = {
+  user_name: "Nome do Usuário",
+  permissions: "Permissões",
+  status: "Status",
+  created_at: "Criado em",
+  actions: "Ações"
+  // Adicione outros mapeamentos conforme necessário
+}
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -104,7 +113,7 @@ export function DataTable<TData, TValue>({
                                             column.toggleVisibility(!!value)
                                         }
                                     >
-                                        {column.id}
+                                        {columnNamesMap[column.id] || column.id}
                                     </DropdownMenuCheckboxItem>
                                 )
                             })}
@@ -176,4 +185,3 @@ export function DataTable<TData, TValue>({
         </div>
     )
 }
-
